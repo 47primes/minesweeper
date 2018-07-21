@@ -1,0 +1,53 @@
+.game {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 0 auto;
+  text-align: center;
+  background: #c0c0c0;
+  border-style: solid;
+  border-color: grey;
+  border-width: 1px 0px 0px 1px;
+}
+
+.board-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+	padding: 1px;
+  border-style: solid;
+  border-color: grey;
+  border-width: 0px 1px 1px 0px;
+}
+
+.flag-count {
+	font-family: Courier;
+	font-weight: bold;
+	color: #cc0000;
+	width: 50px;
+	margin-top: 2px;
+}
+
+.timer {
+	font-family: Courier;
+	font-weight: bold;
+	width: 50px;
+	margin-top: 2px;
+}
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.cell {
+  float: left;
+  line-height: 16px;
+  height: 16px;
+  width: 16px;
+  padding: 0;
+  border-style: solid;
+  border-color: grey;
+  border-width: 0px 1px 1px 0px;
+}
