@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Smiley from './smileys';
+import Smiley from './smiley';
 import Timer from './timer';
 
 class Header extends Component {
@@ -16,7 +16,7 @@ class Header extends Component {
     return(
       <div className="board-header">
         <div className="flag-count">{this.props.flags}</div>
-        <Smiley />
+        <Smiley type="won" />
         <Timer ref={this.timer} />
       </div>
     );
