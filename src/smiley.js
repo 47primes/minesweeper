@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 
 class Smiley extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
   raisedSquare() {
     return(
-        <g>
+      <g>
         <rect width="24" height="24" style={{fill: 'rgb(255,255,255)'}} />
         <g transform="translate(2,2)">
           <rect width="22" height="22" style={{fill: 'rgb(128,128,128)'}} />
@@ -78,6 +83,17 @@ class Smiley extends Component {
         </g>
       </g>
     )
+  }
+
+  pressed() {
+    return(
+      <g>
+        {this.pressedSquare()}
+        <g transform="translate(2,2)">
+          {this.smiley()}
+        </g>
+      </g>
+    );
   }
 
   surprised() {
@@ -237,17 +253,36 @@ class Smiley extends Component {
     )
   }
 
+  press() {
+    if (this.props.gameOver) return;
+
+    this.setState({type: 'pressed'});
+  }
+
+  release() {
+    if (this.props.gameOver) return;
+
+    this.setState({type: 'smiley'});
+  }
+
   render() {
     let type;
-    if (this.props.type) {
-      type = this.props.type;
+    if (this.state.type) {
+      type = this.state.type;
     } else {
-      type = 'unpressed';
+      type = 'smiley';
     }
 
     return(
       <svg width="24" height="24">
         {type && this[type]()}
+        <rect
+          className="button" x="0" y="0" width="24" height="24"
+          onMouseDown={() => this.press()}
+          onMouseUp={() => this.release()}
+          onMouseOut={() => this.release()}
+          onClick={() => this.props.reset()}
+        />
       </svg>
     );
   }

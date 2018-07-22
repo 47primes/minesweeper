@@ -10,7 +10,7 @@ class Cell extends Component {
   }
 
   render() {
-    return <div className="cell"><Square type={this.props.type} /></div>
+    return <div className="cell" onClick={() => this.props.start()}><Square type={this.props.type} /></div>
   }
 }
 

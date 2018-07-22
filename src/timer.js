@@ -30,10 +30,6 @@ class Timer extends Component {
     this.setState({hours: this.state.hours + 1});
   }
 
-  stop() {
-    clearInterval(this.interval);
-  }
-
   start() {
     this.interval = setInterval(
       () => this.addSecond(),
@@ -41,14 +37,9 @@ class Timer extends Component {
     );
   }
 
-  reset() {
-    this.stop();
+  stop() {
+    clearInterval(this.interval);
     this.setState({seconds: 0, minutes: 0, hours: 0});
-    this.start();
-  }
-
-  componentDidMount() {
-    this.start();
   }
 
   componentWillUnmount() {

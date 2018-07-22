@@ -8,16 +8,12 @@ class Header extends Component {
     this.timer = React.createRef();
   }
 
-  resetTimer() {
-    this.timer.current.reset();
-  }
-
   render() {
     return(
       <div className="board-header">
         <div className="flag-count">{this.props.flags}</div>
-        <Smiley type="won" />
-        <Timer ref={this.timer} />
+        <Smiley type="smiley" {...this.props} />
+        <Timer ref={this.timer} {...this.props} />
       </div>
     );
   }

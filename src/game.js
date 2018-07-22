@@ -37,7 +37,7 @@ class Game extends Component {
         let x = Math.round(Math.random()*(rows - 1));
         let y = Math.round(Math.random()*(cols - 1));
         let armed = (mines < flags && x === row && y === col);
-        board[row][col] = <Cell key={row+'.'+col} armed={armed} />;
+        board[row][col] = <Cell key={row+'.'+col} armed={armed} start={() => this.start()} />;
         if (armed) mines++;
       }
     }
@@ -52,14 +52,26 @@ class Game extends Component {
       lost: false,
       rowClicked: null,
       colClicked: null,
+      started: false,
     };
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.difficulty !== prevProps.difficulty) {
-      this.setState({...this.setupGame()});
-			this.header.current.resetTimer();
+      this.reset();
     }
+  }
+
+  start() {
+    if (this.state.started) return;
+
+    this.header.current.timer.current.start();
+    this.setState({started: true});
+  }
+
+  reset() {
+    this.setState({...this.setupGame()});
+    this.header.current.timer.current.stop();
   }
 
   hasWon() {
@@ -76,7 +88,7 @@ class Game extends Component {
       <div className="text-center">
         <div className="game">
           <div>
-						<Header ref={this.header} {...this.state} />
+						<Header ref={this.header} {...this.state} reset={() => this.reset()} />
             {rows}
           </div>
         </div>
