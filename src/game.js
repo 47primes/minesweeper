@@ -175,7 +175,7 @@ class Game extends Component {
   }
 
 	hasWon() {
-		return this.flags == 0 && this.state.coveredCells === this.state.mines;
+		return this.flags === 0 && this.state.coveredCells === this.state.mines;
 	}
 
 	gameOver() {
