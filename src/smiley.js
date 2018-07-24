@@ -254,28 +254,33 @@ class Smiley extends Component {
   }
 
   press() {
-    if (this.props.gameOver) return;
-
     this.setState({type: 'pressed'});
   }
 
   release() {
-    if (this.props.gameOver) return;
-
     this.setState({type: 'smiley'});
   }
 
+  rowClick() {
+    if (this.props.gameOver) return;
+
+    this.setState({type: 'surprised'});
+  }
+
   render() {
-    let type;
-    if (this.state.type) {
-      type = this.state.type;
-    } else {
-      type = 'smiley';
-    }
+		let type;
+
+		if (this.state.type === 'pressed') {
+			type = 'pressed';
+		} else if (this.props.hasWon) {
+			type = 'won';
+		} else {
+			type = (this.props.lost ? 'lost' : null) || this.state.type || 'smiley';
+		}
 
     return(
       <svg width="24" height="24">
-        {type && this[type]()}
+        {this[type]()}
         <rect
           className="button" x="0" y="0" width="24" height="24"
           onMouseDown={() => this.press()}

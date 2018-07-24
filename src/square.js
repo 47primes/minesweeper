@@ -155,18 +155,53 @@ class Square extends Component {
   }
 
   render() {
-    let type;
-    if (this.props.type) {
-      type = this.props.type;
-    } else {
-      type = 'covered';
-    }
+		let square;
+		let cell = this.props.cells[this.props.row][this.props.col];
 
-    return(
-      <svg width="16" height="16">
-        {type && this[type]()}
-      </svg>
-    );
+		if (this.props.gameOver && cell.flagged && !cell.armed) {
+			square = 'flaggedWrong';
+		} else if (cell.wrong) {
+			square = 'clickedBomb';
+		} else if (this.props.gameOver && !this.props.hasWon && cell.armed) {
+			square = 'bomb';
+		} else if (cell.flagged) {
+			square = 'flag';
+		} else if (cell.questioned) {
+			square = 'question';
+		} else if (cell.covered) {
+			square = 'covered';
+		}
+
+		if (square) {
+			return(
+					<svg width="16" height="16">
+						{this[square]()}
+					</svg>
+			);
+		} else {
+			let mines = Number(cell.mines);
+			let style = {fontWeight: 'bold'};
+			switch(mines) {
+				case 1:
+					style.color = 'blue';
+					break;
+				case 2:
+					style.color = 'green';
+					break;
+				case 3:
+					style.color = 'red';
+					break;
+				case 4:
+					style.color = 'navy';
+					break;
+				case 5:
+					style.color = 'brown';
+					break;
+				default:
+					style.color = 'black';
+			}
+			return <span style={style}>{mines > 0 && mines}</span>;
+		}
   }
 }
 

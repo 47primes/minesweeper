@@ -39,6 +39,9 @@ class Timer extends Component {
 
   stop() {
     clearInterval(this.interval);
+  }
+
+  reset() {
     this.setState({seconds: 0, minutes: 0, hours: 0});
   }
 
