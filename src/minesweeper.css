@@ -20,19 +20,25 @@
   border-width: 0px 1px 1px 0px;
 }
 
+@font-face {
+  font-family: Digital;
+  src: url("fonts/digital.ttf");
+}
+
 .flag-count {
-	font-family: Courier;
-	font-weight: bold;
-	color: #cc0000;
 	width: 50px;
-	margin-top: 2px;
+  background: black;
+  color: red;
+  font-family: Digital;
+  font-size: 125%;
 }
 
 .timer {
-	font-family: Courier;
-	font-weight: bold;
 	width: 50px;
-	margin-top: 2px;
+  background: black;
+  color: red;
+  font-family: Digital;
+  font-size: 125%;
 }
 
 .board-row:after {

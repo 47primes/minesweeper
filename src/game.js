@@ -86,6 +86,7 @@ class Game extends Component {
 
   reset() {
     this.setState({...this.setupGame()});
+    this.state.header.current.timer.current.stop();
     this.state.header.current.timer.current.reset();
   }
 
