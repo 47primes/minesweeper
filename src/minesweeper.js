@@ -19,7 +19,7 @@ class Minesweeper extends Component {
 
     return (
       <div>
-        <Navbar>
+        <Navbar fluid={true}>
           <Navbar.Header>
             <Navbar.Brand>
               <a href="">Minesweeper</a>
@@ -37,6 +37,12 @@ class Minesweeper extends Component {
           </Navbar.Collapse>
         </Navbar>
         <Game difficulty={this.state.difficulty} />
+        <footer className="footer container-fluid">
+          <div class="row">
+            <div class="col-lg-6">Created by Mike Bradford</div>
+            <div class="col-lg-6 text-right"><a href="https://github.com/47primes/minesweeper">View Source Code on Github</a></div>
+          </div>
+        </footer>
       </div>
     );
   }
