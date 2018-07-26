@@ -90,8 +90,10 @@ class Game extends Component {
     this.state.header.current.timer.current.reset();
   }
 
-	pressCell() {
+	pressCell(row, col) {
 		if (this.gameOver()) return;
+
+    this.touchEvent = setInterval(() => this.setFlag(row, col), 1000);
 
     this.state.header.current.smiley.current.rowClick();
 	}
@@ -99,11 +101,12 @@ class Game extends Component {
 	releaseCell() {
 		if (this.gameOver()) return;
 
+    clearInterval(this.touchEvent);
+
     this.state.header.current.smiley.current.release();
 	}
 
-  clickCell(row, col, event, doSetState=true) {
-		event.preventDefault();
+  clickCell(row, col, doSetState=true) {
 		if (this.gameOver() || !this.state.cells[row][col].covered) return;
 
 		if (doSetState) {
@@ -113,65 +116,76 @@ class Game extends Component {
 			this.coveredCells = this.state.coveredCells;
 		}
 
-		if (event.ctrlKey) {
-			if (this.cells[row][col].flagged) {
-				this.cells[row][col].questioned = true;
-				this.cells[row][col].flagged = false;
-				this.flags++;
-			} else if (this.cells[row][col].questioned) {
-				this.cells[row][col].questioned = false;
-			} else {
-				this.cells[row][col].flagged = true;
-				this.flags--;
-			}
-		} else {
-			if (this.cells[row][col].questioned || this.cells[row][col].flagged) return;
+    if (this.cells[row][col].questioned || this.cells[row][col].flagged) return;
 
-			if (this.cells[row][col].armed) {
-				this.stop();
-				this.cells[row][col].wrong = true;
-				this.setState({lost: true});
-				return;
-			}
+    if (this.cells[row][col].armed) {
+      this.stop();
+      this.cells[row][col].wrong = true;
+      this.setState({lost: true});
+      return;
+    }
 
-			this.coveredCells--;
-			this.cells[row][col].covered = false;
-			this.cells[row][col].flagged = false;
-			this.cells[row][col].questioned = false;
+    this.coveredCells--;
+    this.cells[row][col].covered = false;
+    this.cells[row][col].flagged = false;
+    this.cells[row][col].questioned = false;
 
-			var rowStart = row > 0 ? row - 1 : 0;
-			var rowEnd = row < this.state.rows - 1 ? row + 1 : this.state.rows - 1;
-			var colStart = col > 0 ? col - 1 : 0;
-			var colEnd = col < this.state.cols - 1 ? col + 1 : this.state.cols - 1;
+    var rowStart = row > 0 ? row - 1 : 0;
+    var rowEnd = row < this.state.rows - 1 ? row + 1 : this.state.rows - 1;
+    var colStart = col > 0 ? col - 1 : 0;
+    var colEnd = col < this.state.cols - 1 ? col + 1 : this.state.cols - 1;
 
-			//Count number of armed adjacent cells
-			for (let r=rowStart; r<=rowEnd; r++) {
-				for (let c=colStart; c<=colEnd; c++) {
-					if (this.cells[r][c].armed) {
-						this.cells[row][col].mines++;
-					}
-				}
-			}
+    //Count number of armed adjacent cells
+    for (let r=rowStart; r<=rowEnd; r++) {
+      for (let c=colStart; c<=colEnd; c++) {
+        if (this.cells[r][c].armed) {
+          this.cells[row][col].mines++;
+        }
+      }
+    }
 
-			//If no adjacent cells are armed, click all uncovered adjacent cells
-			if (this.cells[row][col].mines === 0) {
-				for (let r=rowStart; r<=rowEnd; r++) {
-					for (let c=colStart; c<=colEnd; c++) {
-						if (this.cells[r][c].covered) {
-							this.clickCell(r,c,event,false);
-						}
-					}
-				}
-			}
-		}
+    //If no adjacent cells are armed, click all uncovered adjacent cells
+    if (this.cells[row][col].mines === 0) {
+      for (let r=rowStart; r<=rowEnd; r++) {
+        for (let c=colStart; c<=colEnd; c++) {
+          if (this.cells[r][c].covered) {
+            this.clickCell(r,c,false);
+          }
+        }
+      }
+    }
 
 		if (doSetState) {
 			this.setState({
 				cells: this.cells,
 				flags: this.flags,
-				coveredCells: this.coveredCells,
+				coveredcells: this.coveredcells,
 			}, () => { if (this.gameOver()) this.stop() });
 		}
+  }
+
+  setFlag(row, col, event) {
+    if (event) event.preventDefault();
+		if (this.gameOver() || !this.state.cells[row][col].covered) return;
+
+    let flags = this.state.flags;
+    let cells = this.state.cells.slice();
+
+    if (cells[row][col].flagged) {
+      cells[row][col].questioned = true;
+      cells[row][col].flagged = false;
+      flags++;
+    } else if (cells[row][col].questioned) {
+      cells[row][col].questioned = false;
+    } else {
+      cells[row][col].flagged = true;
+      flags--;
+    }
+
+    this.setState({
+      cells: cells,
+      flags: flags,
+    }, () => { if (this.gameOver()) this.stop() });
   }
 
 	hasWon() {
@@ -192,9 +206,9 @@ class Game extends Component {
 					<Cell
 						key={row+'.'+col}
 						{...{row: row, col: col, gameOver: this.gameOver(), hasWon: this.hasWon(), ...this.state}}
-						onClick={(event) => this.clickCell(row, col, event)}
-						onContextMenu={(event) => this.clickCell(row, col, event)}
-						onMouseDown={() => this.pressCell()}
+						onClick={() => this.clickCell(row, col)}
+						onContextMenu={(event) => this.setFlag(row, col, event)}
+						onMouseDown={() => this.pressCell(row, col)}
 						onMouseUp={() => this.releaseCell()}
 						onMouseOut={() => this.releaseCell()}
 					/>
