@@ -211,6 +211,8 @@ class Game extends Component {
 						onMouseDown={() => this.pressCell(row, col)}
 						onMouseUp={() => this.releaseCell()}
 						onMouseOut={() => this.releaseCell()}
+						onTouchStart={() => this.pressCell(row, col)}
+						onTouchEnd={() => this.releaseCell()}
 					/>
 				);
       }
